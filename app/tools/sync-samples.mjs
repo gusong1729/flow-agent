@@ -20,6 +20,7 @@ const OUT = path.resolve(HERE, '../src/samples.generated.js');
 
 /** 中文源文件 → JS 里的 key。新增示例时在这里登记。key 必须是 ASCII。 */
 const SLUGS = {
+  '业务全流程-七环节': 'business-flow',
   '任务单-餐饮摆台': 'task-dining',
   '早会执行卡-竖版': 'morning-card',
   '异常决策树-设备': 'device-troubleshoot',

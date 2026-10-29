@@ -1,6 +1,6 @@
 [package]
 name = "flow-agent"
-version = "0.1.0"
+version = "0.2.0"
 description = "数采任务统筹 Agent：对话生成任务单，右侧实时出图"
 edition = "2021"
 rust-version = "1.77"
