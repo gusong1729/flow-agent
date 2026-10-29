@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>流程图agent · 数采任务统筹</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">流程图agent</span>
+          <span class="brand-sub">数采任务统筹</span>
+        </div>
+        <div class="topbar-right">
+          <button id="provider-chip" class="chip" type="button" title="切换模型供应商">
+            <span class="dot" id="provider-dot"></span>
+            <span id="provider-label">未配置供应商</span>
+          </button>
+          <button id="open-settings" class="icon-btn" type="button" title="设置">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="2.3"/><path d="M8 1.6v1.9M8 12.5v1.9M1.6 8h1.9M12.5 8h1.9M3.5 3.5l1.3 1.3M11.2 11.2l1.3 1.3M12.5 3.5l-1.3 1.3M4.8 11.2l-1.3 1.3"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <!-- 左：对话 -->
+        <section class="pane-chat" aria-label="对话">
+          <div class="chat-head">
+            <h1 id="doc-title">未命名任务单</h1>
+            <p id="doc-sub" class="muted">贴一段客户采集规则，右边直接长出任务单</p>
+          </div>
+
+          <div id="thread" class="thread" role="log" aria-live="polite"></div>
+
+          <form id="composer" class="composer">
+            <label class="sr-only" for="input">描述你要的流程图</label>
+            <textarea id="input" rows="4" placeholder="例：餐饮场景，用 EGO 头戴 + 腕部相机，拍餐具摆台和撤台，要求拍到双手与桌面，单轮 3 次……"></textarea>
+            <div class="composer-actions">
+              <button type="button" id="fill-sample" class="btn-ghost">填示例</button>
+              <span class="grow"></span>
+              <button type="submit" id="send" class="btn-primary">
+                <span id="send-label">生成任务单</span>
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <!-- 右：画布 -->
+        <section class="pane-canvas" aria-label="画布">
+          <div class="canvas-bar">
+            <span id="canvas-name" class="mono muted">—</span>
+            <span class="grow"></span>
+            <span id="canvas-meta" class="mono muted">—</span>
+            <button type="button" id="export-svg" class="icon-btn" title="导出 SVG">
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5v7.5M5.2 7.4L8 10.2l2.8-2.8M2.8 12.6h10.4"/></svg>
+            </button>
+          </div>
+          <div class="canvas-stage" id="stage">
+            <div class="empty" id="empty">
+              <p class="empty-kicker">画布为空</p>
+              <p class="empty-lead">左边贴一段采集规则，或者先点「填示例」看它长什么样。</p>
+            </div>
+            <iframe id="frame" title="流程图预览" sandbox="allow-scripts allow-same-origin allow-downloads"></iframe>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- 设置抽屉 -->
+    <div id="scrim" class="scrim" hidden></div>
+    <aside id="settings" class="settings" aria-label="供应商设置" aria-hidden="true">
+      <div class="settings-head">
+        <h2>模型供应商</h2>
+        <button type="button" id="close-settings" class="icon-btn" title="关闭">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+        </button>
+      </div>
+      <p class="muted small">
+        Key 只存在本机，不随项目一起提交。DeepSeek / MiniMax 走预设；其它中转站按「自定义」填 baseURL 与协议。
+      </p>
+      <p class="muted small mono" id="store-hint">配置保存在：检测中…</p>
+
+      <div id="provider-list" class="provider-list"></div>
+
+      <details class="add-provider">
+        <summary>新增自定义供应商</summary>
+        <form id="provider-form" class="form">
+          <label>名称<input name="label" required placeholder="如 我的中转站" /></label>
+          <label>协议
+            <select name="protocol">
+              <option value="responses">Responses 兼容（/v1/responses，可设思考预算）</option>
+              <option value="openai">OpenAI 兼容（/v1/chat/completions）</option>
+              <option value="anthropic">Anthropic 兼容（/v1/messages）</option>
+            </select>
+          </label>
+          <label>Base URL<input name="baseURL" required placeholder="https://api.example.com/v1" /></label>
+          <label>API Key<input name="apiKey" type="password" placeholder="sk-…" /></label>
+          <label>模型<input name="model" required placeholder="如 deepseek-chat" /></label>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">保存</button>
+          </div>
+        </form>
+      </details>
+    </aside>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

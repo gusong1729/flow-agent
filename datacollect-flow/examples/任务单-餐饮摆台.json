@@ -1,0 +1,212 @@
+{
+  "title": "任务单 · 餐饮场景 · 餐具摆台与撤台",
+  "subtitle": "客户规则 v1｜点位：临沧云县 XX 餐厅 A 区｜设备：EGO 头戴 + 腕部相机｜单轮目标 4–6 分钟",
+  "direction": "TD",
+  "groups": [
+    { "id": "g1", "label": "一｜进场准备", "members": ["s", "a", "b", "c", "d"] },
+    { "id": "g2", "label": "二｜试拍确认", "members": ["e", "f", "g"] },
+    { "id": "g3", "label": "三｜正式采集", "members": ["h", "i", "j", "k", "l", "m", "n", "o"] },
+    { "id": "g4", "label": "四｜校验与上传", "members": ["p", "q", "r", "t"] }
+  ],
+  "nodes": [
+    {
+      "id": "s",
+      "label": "08:30 到场签到",
+      "kind": "start",
+      "status": "done"
+    },
+    {
+      "id": "a",
+      "label": "核对任务单与物品清单",
+      "kind": "task",
+      "time": "08:30–08:45",
+      "owner": "组长",
+      "status": "done",
+      "detail": "桌位编号 / 餐具件数 / 是否允许使用陶瓷餐具 / 场地当日是否被占用",
+      "note": "件数对不上先不开始；缺件当场补，不要用替代品凑数"
+    },
+    {
+      "id": "b",
+      "label": "设备开机自检",
+      "kind": "task",
+      "time": "目标 3 分钟",
+      "owner": "采集员",
+      "status": "done",
+      "detail": "电量 ≥80%；剩余存储 ≥32G；设备时间与手机一致；镜头无指纹",
+      "note": "电量不足直接换备用机，不允许插着充电线录制"
+    },
+    {
+      "id": "c",
+      "label": "佩戴 EGO 头戴设备",
+      "kind": "task",
+      "time": "目标 2 分钟",
+      "owner": "采集员",
+      "status": "doing",
+      "detail": "镜头位于双眼水平线略上；画面同时含双手与桌面近端边缘；头带不压耳廓"
+    },
+    {
+      "id": "d",
+      "label": "固定腕部相机",
+      "kind": "task",
+      "time": "目标 2 分钟",
+      "owner": "采集员",
+      "status": "doing",
+      "detail": "镜头朝虎口方向；绑带压在腕关节上方，不限制手腕翻转",
+      "note": "手背挡住虎口即整条作废，返工成本最高的一步"
+    },
+    {
+      "id": "e",
+      "label": "试拍回放能否同时看到双手和台面",
+      "kind": "decision",
+      "owner": "采集员",
+      "status": "doing",
+      "detail": "录 10 秒并回放，四个角逐个看：手背、指尖、桌面远端、餐具"
+    },
+    {
+      "id": "f",
+      "label": "重新调整佩戴",
+      "kind": "task",
+      "owner": "采集员",
+      "status": "todo",
+      "detail": "先调头带俯仰角，再调腕带松紧；自查最多调一轮，仍不合格立即找组长",
+      "note": "反复自己调会拖过场地时间窗，宁可换设备"
+    },
+    {
+      "id": "g",
+      "label": "画面确认合格",
+      "kind": "milestone",
+      "owner": "组长",
+      "status": "todo",
+      "detail": "四角无遮挡、手部完整入画、曝光不糊、动作可辨认",
+      "note": "组长没看过就开录，等于把返工压在晚上"
+    },
+    {
+      "id": "h",
+      "label": "动作 1 · 摆放骨碟",
+      "kind": "task",
+      "time": "目标 40 秒",
+      "owner": "采集员",
+      "status": "todo",
+      "detail": "双手端起骨碟，从托盘移到桌位正中，距桌沿约两指；放下后手退出画面再停"
+    },
+    {
+      "id": "i",
+      "label": "动作 2 · 摆放筷架与筷",
+      "kind": "task",
+      "time": "目标 40 秒",
+      "owner": "采集员",
+      "status": "todo",
+      "detail": "筷架置于骨碟右前；筷子按同一朝向放入筷架，两端对齐"
+    },
+    {
+      "id": "j",
+      "label": "动作 3 · 摆放汤碗与汤勺",
+      "kind": "task",
+      "time": "目标 40 秒",
+      "owner": "采集员",
+      "status": "todo",
+      "detail": "汤碗置于骨碟左前；汤勺柄朝右，勺口朝上，与碗沿留一指"
+    },
+    {
+      "id": "k",
+      "label": "动作 4 · 摆放水杯并调间距",
+      "kind": "task",
+      "time": "目标 60 秒",
+      "owner": "采集员",
+      "status": "todo",
+      "detail": "水杯置右上；最后用双手微调四件间距，让画面出现一次整体校准动作"
+    },
+    {
+      "id": "l",
+      "label": "单轮完成自检",
+      "kind": "milestone",
+      "owner": "采集员",
+      "status": "todo",
+      "detail": "全程双手未出画、无漏拍步骤、无中途暂停",
+      "note": "发现漏拍当场补，不要攒到 3 轮后一起补"
+    },
+    {
+      "id": "m",
+      "label": "撤台动作（本轮第二串）",
+      "kind": "risk",
+      "time": "目标 60 秒",
+      "owner": "采集员",
+      "status": "todo",
+      "detail": "按摆放的逆序把四件收回托盘，双手同时离开桌面",
+      "note": "撤台手位比摆台低，容易出画；机位需比摆台再低一档"
+    },
+    {
+      "id": "n",
+      "label": "是否完成 3 轮（含 1 次撤台）",
+      "kind": "decision",
+      "owner": "采集员",
+      "status": "todo"
+    },
+    {
+      "id": "o",
+      "label": "补拍一轮",
+      "kind": "task",
+      "time": "目标 5 分钟",
+      "owner": "采集员",
+      "status": "todo",
+      "detail": "只补不合格的那一轮，其余轮次不复拍",
+      "note": "补拍仍不达标：当天收工后报组长，排次日重拍，不许在现场反复耗"
+    },
+    {
+      "id": "p",
+      "label": "停止录制并确认保存",
+      "kind": "task",
+      "owner": "采集员",
+      "status": "todo",
+      "detail": "停止后等 3 秒再退出；在设备里能看到文件再拔电"
+    },
+    {
+      "id": "q",
+      "label": "上传数据并填采集记录",
+      "kind": "task",
+      "owner": "采集员",
+      "status": "todo",
+      "detail": "上传后核对设备编号 / 采集员 / 任务编号 / 轮次四项与实物一致"
+    },
+    {
+      "id": "r",
+      "label": "组长抽检画面",
+      "kind": "milestone",
+      "owner": "组长",
+      "status": "todo",
+      "detail": "抽 10% 片段看遮挡与完整度，不合格的标返工",
+      "note": "抽检在当晚做，不要等客户退回才发现"
+    },
+    {
+      "id": "t",
+      "label": "交客户验收",
+      "kind": "end",
+      "owner": "项目统筹",
+      "status": "todo",
+      "detail": "汇总当日合格时长 + 异常说明，按客户格式提交"
+    }
+  ],
+  "edges": [
+    { "from": "s", "to": "a" },
+    { "from": "a", "to": "b" },
+    { "from": "b", "to": "c" },
+    { "from": "c", "to": "d" },
+    { "from": "d", "to": "e" },
+    { "from": "e", "to": "g", "label": "合格" },
+    { "from": "e", "to": "f", "label": "不合格", "style": "dashed" },
+    { "from": "f", "to": "g", "label": "调整后由组长确认" },
+    { "from": "g", "to": "h" },
+    { "from": "h", "to": "i" },
+    { "from": "i", "to": "j" },
+    { "from": "j", "to": "k" },
+    { "from": "k", "to": "l" },
+    { "from": "l", "to": "m" },
+    { "from": "m", "to": "n" },
+    { "from": "n", "to": "p", "label": "已完成" },
+    { "from": "n", "to": "o", "label": "未完成", "style": "dashed" },
+    { "from": "o", "to": "p" },
+    { "from": "p", "to": "q" },
+    { "from": "q", "to": "r" },
+    { "from": "r", "to": "t" }
+  ]
+}

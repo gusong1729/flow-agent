@@ -1,0 +1,163 @@
+ :root{--ff:'Segoe UI','Microsoft YaHei',system-ui,sans-serif;
+   --bg:#0e1116;--panel:#171e28;--panel2:#1b212c;--panel3:#212936;--text:#e9edf4;--muted:#93a0b3;--line:#2d3644;--line2:#3a4454;--accent:#4a9dff;--ok:#43c07f;--warn:#e3a338;--accent-text:#4a9dff;
+   --shadow:0 1px 2px rgba(0,0,0,.32),0 8px 22px rgba(0,0,0,.18)}
+ html[data-theme='light']{--bg:#e8dbc4;--panel:#f7efdf;--panel2:#f2e8d6;--panel3:#e2d3b8;--text:#2b2721;--muted:#6f6553;--line:#dccbaa;--line2:#c6b28e;--accent:#bf6b3a;--ok:#35935f;--warn:#b8801a;--accent-text:#884c29;
+   --shadow:0 1px 2px rgba(93,74,45,.12),0 8px 22px rgba(93,74,45,.12)}
+ *{box-sizing:border-box}
+ body{margin:0;padding:20px 20px 40px;background:var(--bg);color:var(--text);font:15px/1.7 var(--ff);-webkit-font-smoothing:antialiased}
+ .head{display:flex;align-items:center;gap:10px;margin:0 0 6px}
+  /* 只有第一个按钮吃 auto 外边距 → 两个按钮一起靠右（之前两个都吃，怎怎么用怎会飘到屏幕中间） */
+  .head .gear{margin-left:0}
+  .head .gear:first-of-type{margin-left:auto}
+  .head .gear + .gear{margin-left:8px}
+ h1{font-size:19px;margin:0}
+ .sub{color:var(--muted);font-size:13px;margin:0 0 16px}
+ .gear{margin-left:auto;background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:10px;
+   padding:7px 11px;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-family:var(--ff)}
+ .gear:hover{border-color:var(--accent);color:var(--accent)}
+ .gear svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+ #help{display:none;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;margin:0 0 16px;box-shadow:var(--shadow)}
+#help.open{display:block}
+#help .row{display:flex;gap:8px;align-items:flex-start;margin-top:9px;font-size:13.5px;line-height:1.65}
+#help .k{flex:0 0 68px;font-weight:600;color:var(--accent-text)}
+#help code{background:var(--panel2);padding:1px 6px;border-radius:6px;font-size:12.5px;border:1px solid var(--line)}
+ /* 「如何使用」里的外链：只用文字色 + 下划线，别抢视觉；对比度走 accent-text 令牌 */
+ #help a{color:var(--accent-text);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 45%,transparent)}
+ #help a:hover{border-bottom-color:var(--accent-text)}
+ #help a:focus-visible{outline:2px solid var(--accent-text);outline-offset:2px;border-radius:3px}
+#settings{display:none;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;margin:0 0 16px;
+   box-shadow:var(--shadow)}
+ #settings.open{display:block}
+ #settings .st{font-size:12px;color:var(--muted);letter-spacing:.08em;font-weight:600;margin:0 0 10px}
+ .opts{display:flex;flex-direction:column;gap:7px}
+ .opt{display:flex;align-items:center;gap:10px;background:var(--panel2);border:1px solid var(--line);border-radius:11px;
+   padding:11px 13px;font-size:14px;cursor:pointer}
+ .opt:hover{border-color:var(--accent)}
+ .opt.on{border-color:var(--accent);background:var(--panel3)}
+ .opt .tick{margin-left:auto;color:var(--accent);font-size:12px;font-weight:600}
+ .opt small{color:var(--muted);font-size:12px;display:block}
+ .tip{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;
+   padding:12px 15px;font-size:13.5px;color:var(--text);margin:0 0 16px;box-shadow:var(--shadow)}
+ .tip b{color:var(--accent)}
+ .tip .row{display:flex;gap:8px;align-items:flex-start;margin-top:7px}
+ .tip .k{flex:0 0 auto;font-weight:600}
+ .swatch{display:inline-block;width:26px;height:14px;border-radius:4px;vertical-align:-2px;border:2px solid #4a9dff}
+ .swatch.soft{border:2px dashed #e3a338}
+ .tip code{background:var(--panel2);padding:1px 6px;border-radius:6px;font-size:12px;border:1px solid var(--line)}
+ a.file{color:var(--text);text-decoration:none;display:block;padding:12px 14px;margin:8px 0;background:var(--panel);
+   border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
+ a.file:hover{border-color:var(--accent)}
+ .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin:0 0 8px}
+ .card{display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:14px;
+   overflow:hidden;text-decoration:none;color:var(--text);box-shadow:var(--shadow);transition:border-color .15s,transform .15s}
+ .card:hover{border-color:var(--accent);transform:translateY(-2px)}
+ .card.dev-row{opacity:.72}
+ .thumb{background:#0e1116;border-bottom:1px solid var(--line);height:190px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+ .thumb img{width:100%;height:100%;object-fit:contain;display:block}
+ .noimg{color:var(--muted);font-size:12px}
+ .cbody{padding:12px 14px 14px;display:flex;flex-direction:column;gap:5px}
+ .ctitle{font-weight:600;font-size:14.5px;line-height:1.4}
+ .cmeta{font-size:12px;color:var(--muted)}
+ .cfile{font:11.5px/1.5 ui-monospace,Consolas,monospace;color:var(--muted);background:var(--panel2);
+   border:1px solid var(--line);border-radius:6px;padding:1px 6px;align-self:flex-start;word-break:break-all}
+ .badge{align-self:flex-start;margin-top:3px;font-size:11px;padding:2px 9px;border-radius:999px;
+   color:var(--ok);border:1px solid color-mix(in srgb,var(--ok) 45%,transparent)}
+ .badge.dev{color:var(--muted);border-color:var(--line)}
+ .badge.lock{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 45%,transparent)}
+ .badge.own{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+ .st2{font-size:11.5px;letter-spacing:.08em;font-weight:600;color:var(--muted);margin:20px 0 6px}
+ .diag{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--ok);border-radius:12px;
+   padding:12px 15px;margin:0 0 16px;font-size:13px;box-shadow:var(--shadow)}
+ .diag b{color:var(--ok)}
+ .diag .dline{font:12.5px/1.7 ui-monospace,Consolas,monospace;color:var(--muted);word-break:break-all}
+ .diag .ok{color:var(--ok)} .diag .bad{color:var(--risk)}
+ .crumbs{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin:0 0 10px}
+ .crumbs a{color:var(--accent);text-decoration:none;padding:3px 7px;border-radius:8px;background:var(--panel);border:1px solid var(--line)}
+ .crumbs a:hover{border-color:var(--accent)}
+ .crumbs b{color:var(--text);font-weight:600}
+ .crumbs .sep2{opacity:.5}
+ .pathbox{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);
+   border-radius:12px;padding:10px 14px;margin:0 0 14px;box-shadow:var(--shadow)}
+ .pathbox .plabel{font-size:11.5px;color:var(--muted);letter-spacing:.06em}
+ .pathbox code{font:12.5px/1.6 ui-monospace,Consolas,monospace;background:var(--panel2);border:1px solid var(--line);
+   border-radius:8px;padding:3px 9px;user-select:all}
+ .mini{background:var(--panel2);border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:4px 10px;font-size:11.5px;cursor:pointer;font-family:var(--ff)}
+ .mini:hover{border-color:var(--accent);color:var(--accent)}
+ .bars{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 14px}
+ .bars input,.bars select{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:10px;
+   padding:8px 12px;font-size:13px;font-family:var(--ff);outline:none}
+ .bars input{width:230px}
+ .bars input:focus,.bars select:focus{border-color:var(--accent)}
+ .sum{font-size:12.5px;color:var(--muted)}
+ .quickhint{font-size:12.5px;color:var(--muted);margin:0 0 14px;line-height:1.85}
+ /* 按「触屏还是鼠标」给不同文案：手机/平板看触屏那套，电脑看鼠标那套 */
+ .only-touch{display:none}
+ .badge.touchonly{display:none}
+ /* 重名流程图提示框 */
+ .dupbox{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:12px;
+   padding:13px 16px;margin:0 0 16px;font-size:13px;box-shadow:var(--shadow)}
+ .dupbox b{color:var(--warn)}
+ .duplead{margin:6px 0 12px;font-size:12.5px;color:var(--muted);line-height:1.75}
+ .dupgroup{border-top:1px solid var(--line);padding:10px 0 4px}
+ .duptitle{font-weight:600;font-size:13px;margin-bottom:6px}
+ .duptag{font-weight:400;font-size:11.5px;padding:1px 8px;border-radius:999px;margin-left:6px}
+ .duptag.same{color:var(--ok);border:1px solid color-mix(in srgb,var(--ok) 45%,transparent)}
+ .duptag.diff{color:var(--warn);border:1px solid color-mix(in srgb,var(--warn) 45%,transparent)}
+ .dupfile{display:flex;align-items:center;gap:10px;font-size:12.5px;padding:3px 0;color:var(--muted)}
+ .dupfile code{font:12px/1.5 ui-monospace,Consolas,monospace;color:var(--text);background:var(--panel2);
+   border:1px solid var(--line);border-radius:6px;padding:1px 7px;word-break:break-all}
+ .dupfile.keep code{border-color:color-mix(in srgb,var(--ok) 50%,transparent)}
+ .dupact{margin:8px 0 2px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+ .duphint{font-size:11.5px;color:var(--muted)}
+ @media (hover:none),(pointer:coarse){
+   .only-pc{display:none}
+   .only-touch{display:inline}
+   .badge.touchonly{display:inline-flex}
+ }
+ .howto{margin:18px 0 0;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
+ .howto summary{cursor:pointer;padding:11px 15px;font-size:13px;color:var(--accent);font-weight:600}
+ .howto .tip{border:0;border-top:1px solid var(--line);border-left:0;border-radius:0;margin:0;box-shadow:none;background:transparent}
+ .minihint{font-size:12px;color:var(--muted);line-height:1.75;margin:0}
+ .badge.stale{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 45%,transparent)}
+.badge.recent{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 45%,transparent)}
+ .plain{display:flex;flex-wrap:wrap;gap:8px}
+ .plain a{color:var(--muted);text-decoration:none;font-size:12.5px;padding:6px 11px;border:1px solid var(--line);
+   border-radius:9px;background:var(--panel)}
+ .plain a:hover{color:var(--accent);border-color:var(--accent)}
+ /* 空目录引导：还没有流程图时给新用户一个「先看个演示」的入口（目录里一有流程图就不再渲染） */
+ .empty{display:flex;flex-direction:column;gap:7px;align-items:flex-start;background:var(--panel);
+   border:1px dashed var(--line2);border-radius:12px;padding:17px 20px;box-shadow:var(--shadow)}
+ .empty b{font-size:14px;color:var(--text)}
+ .empty span{font-size:12.5px;color:var(--muted);line-height:1.75}
+ .empty code{font-size:12px;background:var(--panel2);padding:1px 6px;border-radius:6px;border:1px solid var(--line);color:var(--text)}
+ .empty small{font-size:11.5px;line-height:1.7}
+ .demobtn{display:inline-flex;align-items:center;gap:6px;margin-top:3px;padding:7px 13px;border-radius:9px;
+   border:1px solid var(--accent);color:var(--accent-text);text-decoration:none;font-size:13px;font-weight:600;
+   min-height:38px;background:var(--panel2)}
+ .demobtn:hover{background:var(--panel3)}
+ .demobtn:focus-visible{outline:2px solid var(--accent-text);outline-offset:2px}
+ @media (max-width:620px){
+    .grid{grid-template-columns:1fr;gap:12px} .thumb{height:150px}
+    /* 手机端：两个按钮保持一行、字号收小（可点面积仍 ~40px） */
+    /* 手机端：标题 + 两个按钮同排（标题过长用省略号，按钮靠右） */
+    .head{gap:8px;flex-wrap:nowrap}
+    h1{font-size:16px;flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .head .gear{flex:0 0 auto;font-size:11.5px;padding:5px 8px;min-height:34px;gap:4px}
+    .head .gear svg{width:13px;height:13px}
+    .gear{padding:6px 9px;font-size:12px;white-space:nowrap;gap:5px;min-height:40px}
+    .gear svg{width:14px;height:14px}
+    /* 手机端防止横向溢出（长路径/长文件名会把页面撑宽，导致右上角按钮被裁掉） */
+    body{overflow-x:hidden}
+    .pathbox{max-width:100%}
+    .pathbox code{max-width:100%;overflow-wrap:anywhere;word-break:break-all}
+    .bars{max-width:100%}
+    .bars input{width:min(230px,52vw)}
+    /* 过滤/排序在窄屏各占一行，避免把页面撑宽（撑宽会让右上角按钮被裁掉） */
+    .bars{flex-wrap:wrap}
+    .bars input,.bars select{width:100%}
+    .pathbox .plabel{flex:1 1 100%}
+    .head .gear{max-width:47%}
+  }
+ .foot{color:var(--muted);font-size:12px;margin-top:18px;line-height:1.8}
+  .sign{color:var(--muted);font-size:12px;text-align:right;margin:10px 0 0}
+ small{color:var(--muted);font-size:12px}

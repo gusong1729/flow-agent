@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { renderEverything } from '../src/renderer/flow-browser.js';
+const HERE = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = path.resolve(HERE, '../..');
+const name = process.argv[2] || '任务单-餐饮摆台';
+const spec = JSON.parse(fs.readFileSync(path.join(ROOT, 'datacollect-flow/examples', name + '.json'), 'utf8'));
+const r = renderEverything(spec, { flows: [] });
+const out = path.join(ROOT, 'out', '_browser-' + name + '.html');
+fs.writeFileSync(out, r.html);
+console.log('written', out, r.html.length, 'B');

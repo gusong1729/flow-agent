@@ -1,0 +1,30 @@
+# 构建产物（可由 npm run app 重新生成）
+/app/dist/
+/app/src-tauri/target/
+/app/src-tauri/gen/
+/app/public/
+
+# 渲染产物（可由 datacollect-flow 的 render 重建）
+/out/
+
+# 依赖与缓存
+node_modules/
+__pycache__/
+*.pyc
+
+# 本机配置与密钥（绝对不能进库）
+*.dat
+*.dat.tmp
+providers.dat
+.env
+.env.*
+
+# 编辑器与系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
+
+# 发布产物（构建生成，不进库）
+/dist-release/

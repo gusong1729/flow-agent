@@ -1,0 +1,23 @@
+[package]
+name = "flow-agent"
+version = "0.1.0"
+description = "数采任务统筹 Agent：对话生成任务单，右侧实时出图"
+edition = "2021"
+rust-version = "1.77"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# 出站 HTTP 必须走 Rust：WebView 的来源是 tauri.localhost，各家模型 API 都不发 CORS 头
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+tokio = { version = "1", features = ["rt-multi-thread"] }
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true
