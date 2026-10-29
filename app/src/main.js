@@ -164,7 +164,7 @@ function fail(message) {
 }
 
 /* ── 示例 ── */
-const SAMPLE = 'business-flow'; // ASCII slug，见 tools/sync-samples.mjs
+const SAMPLE = 'task-dining'; // ASCII slug，见 tools/sync-samples.mjs
 
 async function fillSample() {
   try {
@@ -172,7 +172,7 @@ async function fillSample() {
     const spec = SAMPLE_SPECS[SAMPLE];
     if (!spec) throw new Error(`样例 ${SAMPLE} 未生成（先跑 node tools/sync-samples.mjs）`);
     input.value = '';
-    addTurn('user', `（点了「填示例」）看一下数采业务全流程长什么样`);
+    addTurn('user', `（点了「填示例」）看一下餐饮摆台的任务单长什么样`);
     paint(spec, spec.title || SAMPLE);
     addTurn(
       'assistant',

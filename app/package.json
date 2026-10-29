@@ -1,7 +1,7 @@
 {
   "name": "flow-agent",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.1.0",
   "type": "module",
   "description": "数采任务统筹 Agent：对话生成任务单，右侧实时出图",
   "scripts": {

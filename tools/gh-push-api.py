@@ -33,19 +33,9 @@ def gh_api(path: str, method: str = "GET", payload=None):
 
 refs = gh_api(f"/repos/{REPO}/git/refs")
 branch_ref = next((r for r in refs if r["ref"] == f"refs/heads/{BRANCH}"), None)
-
 if branch_ref is None:
-    # 新分支：以 main 为父提交，稍后创建 ref
-    main_ref = next((r for r in refs if r["ref"] == "refs/heads/main"), None)
-    if main_ref is None:
-        raise SystemExit("仓库没有 main，先推 main")
-    parent = main_ref["object"]["sha"]
-    creating = True
-    print(f"新建分支 {BRANCH}，父提交 {parent}（main）")
-else:
-    parent = branch_ref["object"]["sha"]
-    creating = False
-    print(f"父提交 {parent}")
+    raise SystemExit(f"{REPO} 还没有 {BRANCH} 分支的初始提交；先手动种一个。")
+parent = branch_ref["object"]["sha"]
 print(f"父提交 {parent}")
 
 # core.quotepath=false + -z：否则 git 会把中文路径转成 "ç©º" 这种八进制转义
@@ -97,12 +87,9 @@ commit = gh_api(
 )
 print(f"commit {commit['sha']}")
 
-if creating:
-    gh_api(f"/repos/{REPO}/git/refs", "POST", {"ref": f"refs/heads/{BRANCH}", "sha": commit["sha"]})
-else:
-    gh_api(
-        f"/repos/{REPO}/git/refs/heads/{BRANCH}",
-        "PATCH",
-        {"sha": commit["sha"], "force": True},
-    )
+gh_api(
+    f"/repos/{REPO}/git/refs/heads/{BRANCH}",
+    "PATCH",
+    {"sha": commit["sha"], "force": True},
+)
 print(f"已推送 → https://github.com/{REPO}/tree/{BRANCH}")
