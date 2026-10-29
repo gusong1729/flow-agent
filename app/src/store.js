@@ -2,9 +2,11 @@
  * 供应商配置的读写。
  *
  * 桌面端：走 Rust 命令 `load_config` / `save_config`，落在
- *   %APPDATA%\com.ohworkspace.flowagent\providers.dat
- * 文件由 Windows DPAPI（user scope）加密 —— 换机器或换 Windows 账户都解不开，
- * 不是明文躺在磁盘上。ACL 另外收紧到只给当前用户。
+ *   <程序目录>\data\config.dat
+ * 绿色便携：数据跟着程序走，整个文件夹拷走就是全部状态；
+ * 删掉程序目录，配置与浏览器缓存一起清空，系统目录不留东西。
+ * 文件由 Windows DPAPI（machine scope）加密 —— 不绑 Windows 账户，
+ * 但拷到别的电脑上解不开（那边会当成"还没配置"）。
  *
  * 浏览器（npm run dev 调界面时）：退回 localStorage，只用于开发。
  */

@@ -18,7 +18,6 @@ use std::path::PathBuf;
 
 use serde::Serialize;
 use serde_json::Value;
-use tauri::Manager;
 
 #[derive(Serialize)]
 struct CallResult {
@@ -173,7 +172,10 @@ extern "system" {
     fn LocalFree(mem: *mut c_void) -> *mut c_void;
 }
 
-/// DPAPI 加密。flags=0 → user scope，只有同一 Windows 账户能解。
+/// DPAPI 加密。flags=CRYPTPROTECT_LOCAL_MACHINE → **machine scope**：
+/// 只绑这台电脑，不绑当前 Windows 账户。换账户打开同一个文件夹仍可读，
+/// 但文件被拷到别的机器上解不开。
+const CRYPTPROTECT_LOCAL_MACHINE: u32 = 0x4;
 fn dpapi_encrypt(plain: &[u8]) -> Result<Vec<u8>, String> {
     if plain.is_empty() {
         return Err("要保存的内容为空".into());
@@ -193,7 +195,7 @@ fn dpapi_encrypt(plain: &[u8]) -> Result<Vec<u8>, String> {
             std::ptr::null(),
             std::ptr::null(),
             std::ptr::null(),
-            0,
+            CRYPTPROTECT_LOCAL_MACHINE,
             &mut out,
         )
     };
@@ -226,13 +228,13 @@ fn dpapi_decrypt(cipher: &[u8]) -> Result<Vec<u8>, String> {
             std::ptr::null(),
             std::ptr::null(),
             std::ptr::null(),
-            0,
+            CRYPTPROTECT_LOCAL_MACHINE,
             &mut out,
         )
     };
     if ok == 0 {
         return Err(format!(
-            "配置解密失败（换过 Windows 账户，或文件被改过）：{}",
+            "配置解密失败（换过电脑，或文件被改过）：{}",
             std::io::Error::last_os_error()
         ));
     }
@@ -243,13 +245,43 @@ fn dpapi_decrypt(cipher: &[u8]) -> Result<Vec<u8>, String> {
     Ok(bytes)
 }
 
+/// 数据放哪儿：**程序所在目录下的 `data\`**。
+///
+/// 为什么不用 %APPDATA%：
+///   1. 路径短，用户一眼能找到，分享时也好解释；
+///   2. 便携——整个文件夹拷走就是全部状态；
+///   3. **卸载即清干净**：删掉程序目录，配置和浏览器缓存一起没了，不留痕迹。
+///
+/// 只有一种情况退到 %LOCALAPPDATA%\FlowAgent\：程序被放在没有写权限的地方
+/// （比如 Program Files）。这时会在界面里显示实际路径，不静默换地方。
+fn data_dir() -> Result<PathBuf, String> {
+    let exe = std::env::current_exe().map_err(|e| format!("取程序路径失败：{e}"))?;
+    let base = exe
+        .parent()
+        .ok_or("取程序所在目录失败")?
+        .join("data");
+
+    // 探一下可写性：能建目录且能在里面写文件才算数
+    if std::fs::create_dir_all(&base).is_ok() {
+        let probe = base.join(".write-test");
+        if std::fs::write(&probe, b"ok").is_ok() {
+            let _ = std::fs::remove_file(&probe);
+            return Ok(base);
+        }
+    }
+
+    let fallback = std::env::var("LOCALAPPDATA")
+        .map(PathBuf::from)
+        .map_err(|_| "程序目录不可写，且拿不到 LOCALAPPDATA".to_string())?
+        .join("FlowAgent");
+    std::fs::create_dir_all(&fallback).map_err(|e| format!("建数据目录失败：{e}"))?;
+    Ok(fallback)
+}
+
 fn config_path(app: &tauri::AppHandle) -> Result<PathBuf, String> {
-    let dir = app
-        .path()
-        .app_config_dir()
-        .map_err(|e| format!("取配置目录失败：{e}"))?;
-    std::fs::create_dir_all(&dir).map_err(|e| format!("建配置目录失败：{e}"))?;
-    Ok(dir.join("providers.dat"))
+    let _ = app; // 路径不再依赖 app data 目录
+    let dir = data_dir()?;
+    Ok(dir.join("config.dat"))
 }
 
 /// 收紧文件权限：只给当前用户完全控制，然后去掉继承。
@@ -292,7 +324,20 @@ fn load_config(app: tauri::AppHandle) -> Result<String, String> {
         return Ok(String::new());
     }
     let cipher = std::fs::read(&path).map_err(|e| format!("读配置失败：{e}"))?;
-    let plain = dpapi_decrypt(&cipher)?;
+
+    // 换过电脑 / 文件被改过时解不开。这时不要把用户卡在错误里：
+    // 把坏文件改名留证，按"还没配置"启动，让用户重填一次即可。
+    let plain = match dpapi_decrypt(&cipher) {
+        Ok(p) => p,
+        Err(_) => {
+            let stamp = std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .map(|d| d.as_secs())
+                .unwrap_or(0);
+            let _ = std::fs::rename(&path, path.with_file_name(format!("config.bad-{stamp}.dat")));
+            return Ok(String::new());
+        }
+    };
     String::from_utf8(plain).map_err(|e| format!("配置不是合法 UTF-8：{e}"))
 }
 
@@ -361,6 +406,22 @@ fn main() {
     // 第二个实例会撞 WebView2 的 user-data 锁（报 0x800700AA）。不要在用户面前直接崩。
     let result = tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![call_model, load_config, save_config])
+        .setup(|app| {
+            // 窗口在代码里建，只为了把 WebView2 的缓存目录也塞进 data/。
+            // 否则卸载后 %LOCALAPPDATA% 下仍会留下一坨浏览器缓存，不算"清干净"。
+            let dir = data_dir().map_err(|e| Box::<dyn std::error::Error>::from(e))?;
+            let cache = dir.join("webview2");
+            std::fs::create_dir_all(&cache)?;
+
+            tauri::WebviewWindowBuilder::new(app, "main", tauri::WebviewUrl::App("index.html".into()))
+                .title("流程图agent · 数采任务统筹")
+                .inner_size(1440.0, 900.0)
+                .min_inner_size(960.0, 640.0)
+                .center()
+                .data_directory(cache)
+                .build()?;
+            Ok(())
+        })
         .run(tauri::generate_context!());
 
     if let Err(e) = result {

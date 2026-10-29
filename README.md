@@ -43,12 +43,21 @@
 
 > **一个实测结论**：MiniMax 是重思考模型，`max_tokens` 是「思考 + 正文」的总预算。走 `/chat/completions` 生成一张 20 节点的任务单，32768 个 token 里 27543 花在 reasoning 上，正文被截断；改走 `/v1/responses` + `reasoning.effort=minimal` 后 18–27 秒出完整规格。预设已按此配置。
 
-## 你的 Key 存在哪
+## 数据放在哪
 
-- 位置：`%APPDATA%\com.ohworkspace.flowagent\providers.dat`
-- 保护：Windows **DPAPI**（user scope）加密——密钥绑定当前 Windows 账户，文件被拷到别的机器或别的账户都解不开；文件 ACL 另外收紧到只给当前用户。
-- **不是明文**，不写进程序目录，不进任何仓库。
-- 卸载程序不会删它；要彻底清除，手动删掉那个文件即可。
+全部在**程序目录下的 `data\`**，绿色便携：
+
+```
+flow-agent.exe
+data/                 ← 只需删掉这个文件夹就回到全新状态
+  ├─ config.dat       ← 供应商配置（DPAPI 加密）
+  └─ webview2/        ← 页面缓存
+```
+
+- 整个文件夹拷走就是全部状态，换电脑只需重新填一次 Key
+- 不放系统目录，卸载/迁移不残留
+- `config.dat` 由 Windows DPAPI 加密，不是明文
+
 
 ## 从源码构建
 
